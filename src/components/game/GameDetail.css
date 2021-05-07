@@ -1,0 +1,14 @@
+.GameDetail__details{
+    border: 1px solid black;
+}
+
+.GameDetail__details th {
+    border: 1px solid black;
+    background-color: black;
+    color: cornsilk;
+}
+
+.GameDetail__details td {
+    border: 1px solid black;
+    padding: 4px;
+}
