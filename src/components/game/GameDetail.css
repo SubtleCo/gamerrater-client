@@ -12,3 +12,20 @@
     border: 1px solid black;
     padding: 4px;
 }
+
+.reviews {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+}
+
+.review {
+    background-color: rgba(234, 231, 166, 0.7);
+    width: fit-content;
+    height: fit-content;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
