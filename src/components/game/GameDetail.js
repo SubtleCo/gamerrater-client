@@ -3,10 +3,12 @@ import { useHistory, useParams } from 'react-router'
 import { ReviewContext } from '../review/ReviewProvider'
 import './GameDetail.css'
 import { GameContext } from './GameProvider'
+import { createRating } from './RatingProviders'
 
 export const GameDetail = () => {
     const [game, setGame] = useState({})
     const [gameReviews, setGameReviews] = useState([])
+    const [ rating, setRating ] = useState({})
     const { getGameById } = useContext(GameContext)
     const { getReviewsByGame } = useContext(ReviewContext)
     const { gameId } = useParams()
@@ -14,10 +16,28 @@ export const GameDetail = () => {
 
     useEffect(() => {
         getGameById(gameId)
-            .then(setGame)
+            .then(game => {
+                setGame(game)
+                setRating({
+                    score: 0,
+                    game_id: game.id
+                })
+            })
         getReviewsByGame(gameId)
             .then(setGameReviews)
     }, [])
+
+    const handleCreateRating = e => {
+        e.preventDefault()
+        createRating(rating)
+    }
+
+    const handleInputChange = e => {
+        e.preventDefault()
+        const newRating = {...rating}
+        newRating.score = parseInt(e.target.value)
+        setRating(newRating)
+    }
 
 
     return (
@@ -25,6 +45,7 @@ export const GameDetail = () => {
             <h2 className="GameDetail__title">{game.title}</h2>
             <h4 className="GameDetail__designer">A game by {game.designer}</h4>
             <p className="GameDetail__description">{game.description}</p>
+            <p className="GameDetail__averateRating"> Rating: {game.average_rating ? game.average_rating : "not yet rated"}</p>
             <table className="GameDetail__details">
                 <thead>
                     <tr>
@@ -50,6 +71,14 @@ export const GameDetail = () => {
                     </tr>
                 </tbody>
             </table>
+            <div className="rating">
+                <section className="createRating form-group">
+                    <label htmlFor="score">Add a rating</label>
+                    <input type="range" min="1" max="10" value={rating.score} name="score" onChange={handleInputChange}></input>
+                    <p>{rating.score}</p>
+                    <button onClick={handleCreateRating}>Add Rating</button>
+                </section>
+            </div>
             <h4>Categories</h4>
             <div className="GameDetail__categories">
                 {
