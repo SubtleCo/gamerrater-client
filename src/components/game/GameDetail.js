@@ -13,6 +13,7 @@ export const GameDetail = () => {
     const { getReviewsByGame } = useContext(ReviewContext)
     const { gameId } = useParams()
     const history = useHistory()
+    const userId = parseInt(localStorage.getItem("userId"))
 
     useEffect(() => {
         getGameById(gameId)
@@ -39,10 +40,19 @@ export const GameDetail = () => {
         setRating(newRating)
     }
 
+    const handleEditRequest = e => {
+        // check if the current user is the creator of the game
+
+        e.preventDefault()
+        history.push(`/games/${gameId}/edit`)
+
+    }
+
 
     return (
         <section className="GameDetail">
             <h2 className="GameDetail__title">{game.title}</h2>
+            {userId === game.user?.id ? <button className="GameDetail__editButton" onClick={handleEditRequest}>Edit this game</button> : ""}
             <h4 className="GameDetail__designer">A game by {game.designer}</h4>
             <p className="GameDetail__description">{game.description}</p>
             <p className="GameDetail__averateRating"> Rating: {game.average_rating ? game.average_rating : "not yet rated"}</p>
