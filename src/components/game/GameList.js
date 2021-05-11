@@ -28,6 +28,7 @@ export const GameList = (props) => {
                         <div className="game__creator">by {game.designer}</div>
                         <div className="game__players">{game.player_min} players needed</div>
                         <div className="game__skillLevel">Age level is {game.age_min} +</div>
+                        <div className="game__averageRating">Rating: {game.average_rating ? game.average_rating : "not yet rated"}</div>
                     </section>
                 })
             }
