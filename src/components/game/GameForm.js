@@ -4,7 +4,7 @@ import { GameContext } from './GameProvider'
 import './GameForm.css'
 
 export const GameForm = () => {
-    const { getGameById, categories, getCategories, addGame } = useContext(GameContext)
+    const { getGameById, categories, getCategories, addGame, updateGame } = useContext(GameContext)
     const [checkedCategories, setCheckedCategories] = useState([])
     const { gameId } = useParams()
     const history = useHistory()
@@ -21,6 +21,14 @@ export const GameForm = () => {
 
     useEffect(() => {
         getCategories()
+        if (gameId) {
+            getGameById(gameId)
+                .then(game => {
+                    setGame(game)
+                    const gameCategories = game.categories.map(cat => parseInt(cat.id))
+                    setCheckedCategories(gameCategories)
+                })
+        }
     }, [])
 
     useEffect(() => {
@@ -56,9 +64,13 @@ export const GameForm = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        addGame(game)
-            .then(game => history.push(`/games/${game.id}`))
-
+        if (gameId) {
+            updateGame(gameId, game)
+                .then(game => history.push(`/games/${gameId}`))
+        } else {
+            addGame(game)
+                .then(game => history.push(`/games/${game.id}`))
+        }
     }
 
     return (
@@ -136,6 +148,7 @@ export const GameForm = () => {
                                 <input type="checkbox"
                                     name={`category ${c.id}`}
                                     value={c.id}
+                                    checked={checkedCategories.includes(c.id)}
                                     onChange={handleInputChange}
                                 ></input>
                                 <label htmlFor={c.id}> {c.label}</label>
@@ -144,7 +157,7 @@ export const GameForm = () => {
                     }
                 </div>
             </fieldset>
-            <button type="submit" onClick={handleSubmit}>Create</button>
+            <button type="submit" onClick={handleSubmit}>{gameId ? "Edit" : "Create"}</button>
         </form>
     )
 
